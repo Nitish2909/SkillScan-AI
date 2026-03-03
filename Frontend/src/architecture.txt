@@ -1,0 +1,23 @@
+4 Layer Architecture
+
+
+1. UI
+    folder:
+       =>Components
+       =>pages
+
+2. Hooks -> This is used for Managing state and api layer.
+     folder:
+        =>hooks
+
+3. State -> used for data store.
+       folder:
+          =>authContext.jsx
+          =>aiContext.jsx
+
+4. Services -> For Communication with Backend.
+       folder:
+           =>services
+                 file:
+                   =>authApi.js
+                   
