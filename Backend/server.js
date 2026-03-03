@@ -20,7 +20,7 @@ app.use(
 );
 
 app.use("/api/auth", authRoutes);
-app.use("/api/interview",)
+// app.use("/api/interview",)
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
