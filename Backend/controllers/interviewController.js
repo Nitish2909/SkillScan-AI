@@ -9,7 +9,7 @@ import interviewReportModal from "../models/interviewReport.model.js";
  * @name generateInterviewReportController
  * @description  generate interview report based on user self description,resume,job description.
  * @route POST /api/interview/
- * @access
+ * @access Private
  **/
 // Controller to generate interview report using uploaded resume + AI
 const generateInterviewReportController = async (req, res) => {
@@ -125,8 +125,10 @@ const getAllInterviewReportController = async (req, res) => {
 const generateResumePdfController = async (req, res) => {
   const { interviewReportId } = req.params;
 
-  const interviewReport =
-    await interviewReportModal.findById(interviewReportId);
+  const interviewReport = await interviewReportModal.findById({
+    _id: interviewReportId,
+    user: req.user.id,
+  });
 
   if (!interviewReport) {
     return res.status(404).json({
