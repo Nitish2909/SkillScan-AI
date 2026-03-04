@@ -1,12 +1,13 @@
-import express, { urlencoded } from "express";
-const app = express();
 import dotenv from "dotenv";
+dotenv.config();
+import express from "express";
+const app = express();
 import cors from "cors";
 import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
+import interviewRoutes from "./routes/interviewRoutes.js"
 import cookieParser from "cookie-parser";
 
-dotenv.config();
 connectDB();
 
 app.use(express.json());
@@ -20,7 +21,7 @@ app.use(
 );
 
 app.use("/api/auth", authRoutes);
-// app.use("/api/interview",)
+app.use("/api/interview", interviewRoutes)
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
