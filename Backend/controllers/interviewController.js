@@ -30,11 +30,8 @@ const generateInterviewReportController = async (req, res) => {
         message: "Unable to extract text from resume",
       });
     }
-
     // 3.) Get Additional Fields
-
     const { selfDescription, jobDescription } = req.body;
-
     if (!selfDescription?.trim() || !jobDescription?.trim()) {
       return res.status(400).json({
         success: false,
