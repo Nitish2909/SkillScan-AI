@@ -1,13 +1,19 @@
-import { GoogleGenAI } from "@google/genai";
+// import { GoogleGenAI } from "@google/genai";
+import OpenAi from "openai"
 import z from "zod";
 import zodToJsonSchema from "zod-to-json-schema";
-import puppeteer from "puppeteer"
+import puppeteer from "puppeteer";
 import { config } from "dotenv";
 config();
 
 // Initialize Gemini AI with API key from .env file
-const ai = new GoogleGenAI({
-  apiKey: process.env.GOOGLE_GENAI_API_KEY,
+// const ai = new GoogleGenAI({
+//   apiKey: process.env.GOOGLE_GENAI_API_KEY,
+// });
+
+const ai = new OpenAi({
+  apiKey: process.env.OPENAI_API_KEY,
+  baseURL: "https://api.chatanywhere.tech/v1",
 });
 
 // Define the structure of Interview Report using Zod
@@ -16,53 +22,31 @@ const interviewReportSchema = z.object({
   // Match score between candidate and job
   matchScore: z
     .number()
+    .min(0)
+    .max(100)
     .describe(
       "A score between 0 and 100 indicating how well the candidate's profile matches the job describe",
     ),
   // List of technical questions
-  technicalQuestions: z
-    .array(
-      z.object({
-        question: z
-          .string()
-          .describe("The technical question asked in interview"),
-        intention: z
-          .string()
-          .describe("The intention behind the question asked by interviewer"),
-        answer: z
-          .string()
-          .describe("Answer the quesstion that is asked in the interview"),
+  technicalQuestions: z.array(z.object({
+        question: z.string().min(1).describe("The technical question asked in interview"),
+        intention: z.string().min(1).describe("The intention behind the question asked by interviewer"),
+        answer: z.string().min(1).describe("Answer the quesstion that is asked in the interview"),
       }),
-    )
-    .describe(
-      "Technical questions that can be asked in the interview along with their intention and how to answer them",
-    ),
+    ).min(3).describe("Technical questions that can be asked in the interview along with their intention and how to answer them"),
   // List of behavioral questions
-  behavioralQuestions: z
-    .array(
-      z.object({
-        question: z
-          .string()
-          .describe("The behavioral questions asked in interview"),
-        intention: z
-          .string()
-          .describe("The intention the interviewer behind asking tis question"),
-        answer: z
-          .string()
-          .describe(
-            "How to answer this question, what points to cover, what approach to take etc.",
-          ),
+  behavioralQuestions: z.array(z.object({
+        question: z.string().min(1).describe("The behavioral questions asked in interview"),
+        intention: z.string().min(1).describe("The intention the interviewer behind asking tis question"),
+        answer: z.string().min(1).describe("How to answer this question, what points to cover, what approach to take etc."),
       }),
-    )
-    .describe(
-      "Behavioral questions that can be asked in the interview along with their intention and how to answer them",
-    ),
+    ).min(3).describe("Behavioral questions that can be asked in the interview along with their intention and how to answer them"),
   // Skill gaps in candidate profile
 
   skillGaps: z
     .array(
       z.object({
-        skill: z.string().describe("The skill which the candidate is lacking"),
+        skill: z.string().min(1).describe("The skill which the candidate is lacking"),
         severity: z
           .enum(["low", "medium", "high"])
           .describe(
@@ -74,15 +58,8 @@ const interviewReportSchema = z.object({
       "List of skill gaps in the candidate's profile along with their severity",
     ),
   // Preparation plan day-wise
-  preparationPlan: z
-    .array(
-      z.object({
-        day: z
-          .number()
-          .describe("The day number in the preparation plan, starting from 1"),
-        focus: z
-          .string()
-          .describe(
+  preparationPlan: z.array(z.object({day: z.number().describe("The day number in the preparation plan, starting from 1"),
+    focus: z.string().describe(
             "The main focus of this day in the preparation plan, e.g. data structures, system design, mock interviews etc.",
           ),
         tasks: z
@@ -97,11 +74,7 @@ const interviewReportSchema = z.object({
     ),
 
   // Job title
-  title: z
-    .string()
-    .describe(
-      "The title of the job for which the interview report is generated",
-    ),
+  title: z.string().describe( "The title of the job for which the interview report is generated"),
 });
 
 // =======================================
@@ -117,19 +90,43 @@ const generateInterviewReport = async ({
                         Resume: ${resume}
                         Self Description: ${selfDescription}
                         Job Description: ${jobDescription}
+
+                Return ONLY valid JSON.
+
+Follow this JSON schema strictly:
+${JSON.stringify(zodToJsonSchema(interviewReportSchema), null, 2)}
+
+Rules:
+- Do not add explanations
+- Do not add markdown
+- Do not wrap in \`\`\`
+- Every field must follow the schema
+- matchScore must be between 0 and 100
 `;
 
-  const response = await ai.models.generateContent({
-    // model: "gemini-3-flash-preview"
-    model: gemini-2.5-flash-lite,
-    contents: prompt,
-    config: {
-      responseMimeType: "application/json",
-      responseSchema: zodToJsonSchema(interviewReportSchema),
-    },
-  });
+  // const response = await ai.models.generateContent({
+  //   // model: "gemini-3-flash-preview",
+  //   model: 'gemini-2.5-flash-lite',
+  //   contents: prompt,
+  //   config: {
+  //     responseMimeType: "application/json",
+  //     responseSchema: zodToJsonSchema(interviewReportSchema),
+  //   },
+  // });
 
-  return JSON.parse(response.text);
+  // return JSON.parse(response.text);
+
+   const response = await ai.chat.completions.create({
+      // model: "gpt-3.5-turbo"
+     model: "gpt-5-mini",
+      messages: [{ role: "system", content: prompt }],
+      response_format: { type: "json_object" },
+    });
+    let rawText = response.choices[0].message.content;
+     const parsed = JSON.parse(rawText);
+     return parsed
+    console.log(rawText);
+
 };
 
 // ===============================

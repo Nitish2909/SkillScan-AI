@@ -1,9 +1,16 @@
-import pdfParse from "pdf-parse";
+import * as PdfParse from "pdf-parse-new";
 import {
   generateInterviewReport,
   generateResumePdf,
 } from "../services/aiService.js";
 import interviewReportModal from "../models/interviewReport.model.js";
+import fs from 'node:fs'
+import { log } from "node:console";
+
+const parser = new PdfParse.SmartPDFParser({
+  oversaturationFactor: 2.0,
+  enableFastPath: true
+});
 
 /**
  * @name generateInterviewReportController
@@ -20,9 +27,11 @@ const generateInterviewReportController = async (req, res) => {
         message: "Resume PDF file is required",
       });
     }
+    // const buffer = fs.readFileSync(req.file);
     // 2.) Extract text from PDF
-    const parsed = await pdfParse(req.file.buffer);
+    const parsed = await parser.parse(req.file.buffer);;
     const resumeContent = parsed.text?.trim();
+
 
     if (!resumeContent) {
       return res.status(400).json({
@@ -45,6 +54,7 @@ const generateInterviewReportController = async (req, res) => {
       selfDescription,
       jobDescription,
     });
+    console.log(interviewReportByAi)
 
     // 5.) Save in DB
     const interviewReport = await interviewReportModal.create({

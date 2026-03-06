@@ -24,7 +24,7 @@
     "multer": "^2.1.0",
     "nodemon": "^3.1.14",
     "openai": "^6.25.0",
-    "pdf-parse": "^1.1.1",
+    "pdf-parse-new": "^2.0.0",
     "pdf-parser": "^1.0.5",
     "pdfjs-dist": "^5.5.207",
     "puppeteer": "^24.37.5",
