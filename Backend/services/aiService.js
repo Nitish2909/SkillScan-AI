@@ -11,6 +11,8 @@ config();
 //   apiKey: process.env.GOOGLE_GENAI_API_KEY,
 // });
 
+
+// Initialize OpenAI with API key from .env file
 const ai = new OpenAi({
   apiKey: process.env.OPENAI_API_KEY,
   baseURL: "https://api.chatanywhere.tech/v1",
@@ -28,25 +30,54 @@ const interviewReportSchema = z.object({
       "A score between 0 and 100 indicating how well the candidate's profile matches the job describe",
     ),
   // List of technical questions
-  technicalQuestions: z.array(z.object({
-        question: z.string().min(1).describe("The technical question asked in interview"),
-        intention: z.string().min(1).describe("The intention behind the question asked by interviewer"),
-        answer: z.string().min(1).describe("Answer the quesstion that is asked in the interview"),
+  technicalQuestions: z
+    .array(
+      z.object({
+        question: z
+          .string()
+          .describe("The technical question asked in interview"),
+        intention: z
+          .string()
+          .describe("The intention behind the question asked by interviewer"),
+        answer: z
+          .string()
+          .describe("Answer the quesstion that is asked in the interview"),
       }),
-    ).min(3).describe("Technical questions that can be asked in the interview along with their intention and how to answer them"),
+    )
+    .min(3)
+    .describe(
+      "Technical questions that can be asked in the interview along with their intention and how to answer them",
+    ),
   // List of behavioral questions
-  behavioralQuestions: z.array(z.object({
-        question: z.string().min(1).describe("The behavioral questions asked in interview"),
-        intention: z.string().min(1).describe("The intention the interviewer behind asking tis question"),
-        answer: z.string().min(1).describe("How to answer this question, what points to cover, what approach to take etc."),
+  behavioralQuestions: z
+    .array(
+      z.object({
+        question: z
+          .string()
+          .describe("The behavioral questions asked in interview"),
+        intention: z
+          .string()
+          .describe("The intention the interviewer behind asking tis question"),
+        answer: z
+          .string()
+          .describe(
+            "How to answer this question, what points to cover, what approach to take etc.",
+          ),
       }),
-    ).min(3).describe("Behavioral questions that can be asked in the interview along with their intention and how to answer them"),
+    )
+    .min(3)
+    .describe(
+      "Behavioral questions that can be asked in the interview along with their intention and how to answer them",
+    ),
   // Skill gaps in candidate profile
 
   skillGaps: z
     .array(
       z.object({
-        skill: z.string().min(1).describe("The skill which the candidate is lacking"),
+        skill: z
+          .string()
+          .min(1)
+          .describe("The skill which the candidate is lacking"),
         severity: z
           .enum(["low", "medium", "high"])
           .describe(
@@ -54,12 +85,20 @@ const interviewReportSchema = z.object({
           ),
       }),
     )
+    .min(3)
     .describe(
       "List of skill gaps in the candidate's profile along with their severity",
     ),
   // Preparation plan day-wise
-  preparationPlan: z.array(z.object({day: z.number().describe("The day number in the preparation plan, starting from 1"),
-    focus: z.string().describe(
+  preparationPlan: z
+    .array(
+      z.object({
+        day: z
+          .number()
+          .describe("The day number in the preparation plan, starting from 1"),
+        focus: z
+          .string()
+          .describe(
             "The main focus of this day in the preparation plan, e.g. data structures, system design, mock interviews etc.",
           ),
         tasks: z
@@ -69,12 +108,17 @@ const interviewReportSchema = z.object({
           ),
       }),
     )
+    .min(7)
     .describe(
       "A day-wise preparation plan for the candidate to follow in order to prepare for the interview effectively",
     ),
 
   // Job title
-  title: z.string().describe( "The title of the job for which the interview report is generated"),
+  title: z
+    .string()
+    .describe(
+      "The title of the job for which the interview report is generated",
+    ),
 });
 
 // =======================================
@@ -91,22 +135,59 @@ const generateInterviewReport = async ({
                         Self Description: ${selfDescription}
                         Job Description: ${jobDescription}
 
-                Return ONLY valid JSON.
+Return ONLY valid JSON.
+STRICT RULES:
 
-Follow this JSON schema strictly:
+1. title
+- Must be a short job title (e.g., "MERN Stack Developer", "Backend Developer", "Full Stack Engineer").
+- Must be a string.
+
+2. matchScore
+- Must be a number between 0 and 100.
+- Represents how well the candidate matches the job description.
+
+3. technicalQuestions
+- Must be an array containing EXACTLY 5 objects.
+- Each object must contain:
+  - question: string (a technical interview question)
+  - intention: string (why the interviewer asks this question)
+  - answer: string (how the candidate should answer this question)
+
+4. behavioralQuestions
+- Must be an array containing EXACTLY 3 objects.
+- Each object must contain:
+  - question: string (a behavioral interview question)
+  - intention: string (the purpose of the question)
+  - answer: string (how the candidate should answer it)
+
+5. skillGaps
+- Must be an array containing AT LEAST 3 objects.
+- Each object must contain:
+  - skill: string (missing or weak skill)
+  - severity: must be one of ["low", "medium", "high"]
+
+6. preparationPlan
+- Must be an array containing EXACTLY 7 objects (7-day plan).
+- Each object must contain:
+  - day: number (1 to 7)
+  - focus: string (main topic to study)
+  - tasks: array of strings with AT LEAST 3 tasks.
+
+7. Output Requirements
+- Return ONLY valid JSON.
+- Do NOT include explanations.
+- Do NOT include markdown.
+- Do NOT wrap the JSON in blocks.
+- Every field must be present.
+- Arrays must NOT be empty.
+Do NOT return empty arrays.
+Schema:
 ${JSON.stringify(zodToJsonSchema(interviewReportSchema), null, 2)}
-
-Rules:
-- Do not add explanations
-- Do not add markdown
-- Do not wrap in \`\`\`
-- Every field must follow the schema
-- matchScore must be between 0 and 100
 `;
 
   // const response = await ai.models.generateContent({
-  //   // model: "gemini-3-flash-preview",
-  //   model: 'gemini-2.5-flash-lite',
+  //   model: "gemini-3-flash-preview",
+  //   // model: 'gemini-2.5-flash-lite',
   //   contents: prompt,
   //   config: {
   //     responseMimeType: "application/json",
@@ -126,7 +207,6 @@ Rules:
      const parsed = JSON.parse(rawText);
      return parsed
     console.log(rawText);
-
 };
 
 // ===============================

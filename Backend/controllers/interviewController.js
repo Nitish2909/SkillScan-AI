@@ -4,8 +4,6 @@ import {
   generateResumePdf,
 } from "../services/aiService.js";
 import interviewReportModal from "../models/interviewReport.model.js";
-import fs from 'node:fs'
-import { log } from "node:console";
 
 const parser = new PdfParse.SmartPDFParser({
   oversaturationFactor: 2.0,
@@ -27,7 +25,7 @@ const generateInterviewReportController = async (req, res) => {
         message: "Resume PDF file is required",
       });
     }
-    // const buffer = fs.readFileSync(req.file);
+   
     // 2.) Extract text from PDF
     const parsed = await parser.parse(req.file.buffer);;
     const resumeContent = parsed.text?.trim();
@@ -56,7 +54,11 @@ const generateInterviewReportController = async (req, res) => {
     });
     console.log(interviewReportByAi)
 
+    if (!interviewReportByAi.title) {
+  interviewReportByAi.title = "Interview Report";
+}
     // 5.) Save in DB
+    /** 
     const interviewReport = await interviewReportModal.create({
       user: req.user.id,
       resume: resumeContent,
@@ -64,7 +66,19 @@ const generateInterviewReportController = async (req, res) => {
       jobDescription,
       ...interviewReportByAi,
     });
-
+*/
+const interviewReport = await interviewReportModal.create({
+  user: req.user.id,
+  resume: resumeContent,
+  selfDescription,
+  jobDescription,
+  title: interviewReportByAi.title || "Interview Report",
+  matchScore: interviewReportByAi.matchScore,
+  technicalQuestions: interviewReportByAi.technicalQuestions,
+  behavioralQuestions: interviewReportByAi.behavioralQuestions,
+  skillGaps: interviewReportByAi.skillGaps,
+  preparationPlan: interviewReportByAi.preparationPlan,
+});
     return res.status(201).json({
       success: true,
       message: "Interview Report Generated Successfully",
