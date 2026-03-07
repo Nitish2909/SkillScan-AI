@@ -126,10 +126,8 @@ const generateInterviewReportByIdController = async (req, res) => {
  */
 
 const getAllInterviewReportController = async (req, res) => {
-  const interviewReports = (
-    await interviewReportModal.find({ user: req.user.id })
-  )
-    .sort({ createdAt: -1 })
+  const interviewReports = 
+    await interviewReportModal.find({ user: req.user.id }).sort({ createdAt: -1 })
     .select(
       "-resume -selfDescription -jobDescription -__v -technicalQuestions -behavioralQuestions -skillGaps -preparationPlan",
     );

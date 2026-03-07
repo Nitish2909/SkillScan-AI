@@ -253,7 +253,7 @@ const generateResumePdf = async ({
   // Schema for resume response (must contain HTML)
   const resumePdfSchema = z.object({
     html: z
-      .string()()
+      .string()
       .describe("HTML content of resume which will be converted to PDF"),
   });
   // Detailed prompt for resume generation
@@ -273,17 +273,26 @@ const generateResumePdf = async ({
     - Be 1-2 pages long
   `;
   // Call Gemini AI to generate HTML resume
-  const response = await ai.models.generateContent({
-    model: "gemini-3-flash-preview",
-    contents: prompt,
-    config: {
-      responseMimeType: "application/json",
-      responseSchema: zodToJsonSchema(resumePdfSchema),
-    },
-  });
+  // const response = await ai.models.generateContent({
+  //   model: "gemini-3-flash-preview",
+  //   contents: prompt,
+  //   config: {
+  //     responseMimeType: "application/json",
+  //     responseSchema: zodToJsonSchema(resumePdfSchema),
+  //   },
+  // });
+     const response = await ai.chat.completions.create({
+      // model: "gpt-3.5-turbo"
+     model: "gpt-5-mini",
+      messages: [{ role: "system", content: prompt }],
+      response_format: { type: "json_object" },
+    });
+    let rawText = response.choices[0].message.content;
+
 
   // Parse AI JSON response
-  const jsonContent = JSON.parse(response.text);
+  const jsonContent = JSON.parse(rawText);
+  console.log(jsonContent);
 
   // Convert generated HTML to PDF
   const pdfBuffer = await generatePdfFromHtml(jsonContent.html);
