@@ -21,3 +21,25 @@
                  file:
                    =>authApi.js
                    
+
+
+
+
+when click on generate button after that the flow is :
+Interview Page
+      ↓
+generateReport() API
+      ↓
+Backend creates report
+      ↓
+Returns report with _id
+      ↓
+navigate("/interview/:id")
+      ↓
+InterviewReport page loads
+      ↓
+useParams() gets interviewId
+      ↓
+getReportById() fetches report
+      ↓
+Dashboard UI shown

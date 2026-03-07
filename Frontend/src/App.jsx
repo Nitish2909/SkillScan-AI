@@ -3,6 +3,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { RouterProvider } from "react-router";
 import { router } from "./appRoutes";
 import { AuthProvider } from "./features/auth/authContext";
+import { InterviewProvider } from "./features/interview/interviewContext";
 
 function App() {
   return (
@@ -10,7 +11,9 @@ function App() {
       <AuthProvider>
         {/* Toast Notification Container */}
         <ToastContainer position="top-center" autoClose={3000} />
-        <RouterProvider router={router} />
+        <InterviewProvider>
+          <RouterProvider router={router} />
+        </InterviewProvider>
       </AuthProvider>
     </>
   );

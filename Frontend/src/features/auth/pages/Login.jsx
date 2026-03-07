@@ -39,8 +39,8 @@ const Login = () => {
         password: "",
       });
 
-      //Redirect to home Page
-      navigate("/");
+      //Redirect to Interview Page
+      navigate("/interview");
     } catch (error) {
       toast.error(error.response?.data?.message || "Something went wrong");
     } finally {
@@ -48,69 +48,83 @@ const Login = () => {
     }
   };
   return (
-    <main>
-      <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-        {/* Login Card */}
-        <div className="w-full max-w-md bg-white shadow-2xl rounded-2xl p-8 transition-all duration-300 hover:shadow-3xl">
-          {/* Title */}
-          <h2 className="text-3xl font-bold mb-2 text-center">Welcome Back</h2>
+  <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-indigo-950 to-black px-4">
 
-          <p className="text-center text-sm text-gray-500 mb-6">
-            Login to continue
-          </p>
+    {/* Login Card */}
+    <div className="w-full max-w-md bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl rounded-2xl p-8">
 
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Email Input */}
-            <div>
-              <label className="block text-sm font-medium mb-1">Email</label>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                placeholder="Enter your Email"
-                onChange={handleChange}
-                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition"
-              />
-            </div>
+      {/* Title */}
+      <div className="text-center mb-6">
+        <h2 className="text-3xl font-bold text-white mb-2">
+          Welcome Back
+        </h2>
 
-            {/* Password Input */}
-            <div>
-              <label className="block text-sm font-medium mb-1">Password</label>
-              <input
-                type="password"
-                name="password"
-                value={formData.password}
-                placeholder="Enter your Password"
-                onChange={handleChange}
-                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition"
-              />
-            </div>
-
-            {/* Button */}
-            <button
-              type="submit"
-              disabled={loading}
-              className="bg-green-500 text-white rounded-lg hover:bg-green-600 w-full h-12 text-lg font-semibold transition disabled:opacity-70"
-            >
-              {loading ? "Logging In..." : "Login"}
-            </button>
-          </form>
-
-          {/* Footer */}
-          <p className="text-sm text-center mt-6">
-            Don't have an account?{" "}
-            <Link
-              to="/register"
-              className="text-green-600 font-semibold hover:underline"
-            >
-              Sign Up
-            </Link>
-          </p>
-        </div>
+        <p className="text-gray-300 text-sm">
+          Login to your SkillScan AI account
+        </p>
       </div>
-    </main>
-  );
+
+      {/* Form */}
+      <form onSubmit={handleSubmit} className="space-y-5">
+
+        {/* Email */}
+        <div>
+          <label className="block text-sm text-gray-300 mb-1">
+            Email
+          </label>
+
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            placeholder="Enter your email"
+            onChange={handleChange}
+            className="w-full px-4 py-3 rounded-lg bg-white/20 text-white placeholder-gray-300 border border-white/20 focus:outline-none focus:ring-2 focus:ring-pink-500"
+          />
+        </div>
+
+        {/* Password */}
+        <div>
+          <label className="block text-sm text-gray-300 mb-1">
+            Password
+          </label>
+
+          <input
+            type="password"
+            name="password"
+            value={formData.password}
+            placeholder="Enter your password"
+            onChange={handleChange}
+            className="w-full px-4 py-3 rounded-lg bg-white/20 text-white placeholder-gray-300 border border-white/20 focus:outline-none focus:ring-2 focus:ring-pink-500"
+          />
+        </div>
+
+        {/* Button */}
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full py-3 rounded-lg font-semibold text-white bg-gradient-to-r from-pink-500 to-purple-600 hover:scale-[1.02] transition-all duration-300 shadow-lg disabled:opacity-70"
+        >
+          {loading ? "Logging In..." : "Login"}
+        </button>
+
+      </form>
+
+      {/* Footer */}
+      <p className="text-sm text-gray-300 text-center mt-6">
+        Don't have an account?{" "}
+        <Link
+          to="/register"
+          className="text-pink-400 font-semibold hover:underline"
+        >
+          Sign Up
+        </Link>
+      </p>
+
+    </div>
+
+  </main>
+);
 };
 
 export default Login;
