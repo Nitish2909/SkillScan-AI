@@ -177,7 +177,7 @@ const InterviewReport = () => {
           <button
             onClick={handleBack}
             className="flex items-center justify-center px-6 py-2 w-full md:w-auto text-sm font-medium 
-             text-white bg-red-700 hover:bg-red-800 rounded-lg shadow-sm 
+             text-white bg-red-600 hover:bg-red-700 rounded-lg shadow-sm 
              transition transform hover:-translate-y-1 hover:shadow-md duration-200"
           >
             <span className="mr-2">←</span>
