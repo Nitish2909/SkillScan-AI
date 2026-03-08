@@ -25,7 +25,7 @@ export const login = async ({ email, password }) => {
     const res = await axiosInstance.post("/auth/login", {
       email,
       password,
-    });
+    },{withCredentials:true});
     return res.data;
   } catch (error) {
     toast.error(error.response?.data || { message: "Something went wrong" });
