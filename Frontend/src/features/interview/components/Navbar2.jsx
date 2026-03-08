@@ -1,10 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Menu, X, Sparkles, ChevronRight } from "lucide-react";
+import { useAuth } from "../../auth/hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const navigate = useNavigate()
+
+const { handleLogout} = useAuth();
+
+const handleLogoutbtn = ()=>{
+      handleLogout();
+     navigate("/")
+  }
 
   useEffect(() => {
     const handleScroll = () => {
@@ -41,27 +52,12 @@ const Navbar = () => {
 
             {/* Desktop Buttons */}
             <div className="hidden md:flex items-center space-x-4">
-              {/* <Link
-                to="/login"
-                className="px-5 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 transition"
-              >
-                LogIn
-              </Link> */}
-
-              <Link
-                to="/login"
+              <button
+                onClick={handleLogoutbtn}
                 className="px-5 py-2 text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg shadow-md hover:scale-105 hover:shadow-lg transition-all duration-300"
               >
-                Log In
-              </Link>
-
-              <Link
-                to="/register"
-                className="px-6 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center"
-              >
-                Get Started
-                <ChevronRight className="w-4 h-4 ml-1" />
-              </Link>
+                Logout
+              </button>
             </div>
 
             {/* Mobile Button */}
@@ -81,16 +77,9 @@ const Navbar = () => {
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
           <div className="md:hidden bg-white shadow-lg px-4 py-6 space-y-3">
-            <Link to="/login" className="block text-center py-2 text-gray-700">
-              LogIn
-            </Link>
-
-            <Link
-              to="/register"
-              className="block text-center py-2 text-white bg-blue-600 rounded-lg"
-            >
-              Get Started
-            </Link>
+            <button onClick={handleLogoutbtn} className="block text-center py-2 text-gray-700">
+              Logout
+            </button>
           </div>
         )}
       </nav>

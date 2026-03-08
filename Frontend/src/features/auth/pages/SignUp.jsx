@@ -83,7 +83,7 @@ const Register = () => {
     <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-indigo-950 to-black px-4">
       <div className="w-full max-w-md bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl rounded-2xl p-8">
         {/* Title */}
-        <div className="text-center mb-6">
+        <div className="text-center mb-4">
           <h2 className="text-3xl font-bold text-white mb-2">Create Account</h2>
 
           <p className="text-gray-300 text-sm">
@@ -182,7 +182,7 @@ const Register = () => {
         </form>
 
         {/* Footer */}
-        <p className="text-sm text-gray-300 text-center mt-6">
+        <p className="text-sm text-gray-300 text-center mt-3">
           Already have an account?{" "}
           <Link
             to="/login"
