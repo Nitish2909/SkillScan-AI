@@ -6,6 +6,6 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
   plugins: [react(), tailwindcss()],
     server:{
-    allowedHosts:['https://skillscan-ai-website.onrender.com']
+    allowedHosts:['skillscan-ai-website.onrender.com']
   }
 });
