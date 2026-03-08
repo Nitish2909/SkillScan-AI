@@ -48,7 +48,11 @@ const registerUserController = async (req, res) => {
     const token = generateToken(user._id);
 
     //6.) Store token in cookie
-    res.cookie("token", token);
+    res.cookie("token", token, {
+      secure: true,
+      httpOnly: true,
+      sameSite: "None",
+    });
 
     //7.) send response with user
     res.status(201).json({
@@ -105,8 +109,11 @@ const loginUserController = async (req, res) => {
     const token = generateToken(user._id);
 
     //5.) Store token in cookie
-    res.cookie("token", token);
-
+    res.cookie("token", token, {
+      secure: true,
+      httpOnly: true,
+      sameSite: "None",
+    });
     //6.) send response with user
     res.status(201).json({
       success: true,
@@ -171,7 +178,6 @@ const getMeController = async (req, res) => {
       message: "User details fetched successfully",
       user,
     });
-
   } catch (error) {
     res.status(500).json({
       message: "Server Error",
