@@ -4,7 +4,6 @@ import { toast } from "react-toastify";
 const axiosInstance = axios.create({
   // baseURL: "http://localhost:5000/api",
    baseURL: "https://skillscan-ai-gacu.onrender.com/api",
-  withCredentials: true,
 });
 
 export const register = async ({ username, email, password }) => {
@@ -35,7 +34,9 @@ export const login = async ({ email, password }) => {
 
 export const logout = async () => {
   try {
-    const res = await axiosInstance.get("/auth/logout");
+    const res = await axiosInstance.get("/auth/logout",{
+        withCredentials:true
+      });
 
     return res.data;
   } catch (error) {
@@ -45,7 +46,11 @@ export const logout = async () => {
 
 export const getMe = async () => {
   try {
-    const res = await axiosInstance.get("/auth/get-me");
+    const res = await axiosInstance.get("/auth/get-me",
+      {
+        withCredentials:true
+      }
+    );
     return res.data;
   } catch (error) {
     toast.error(error.response?.data || { message: "Something went wrong" });
