@@ -44,7 +44,7 @@ const interviewReportSchema = z.object({
           .describe("Answer the quesstion that is asked in the interview"),
       }),
     )
-    .min(3)
+    .min(7)
     .describe(
       "Technical questions that can be asked in the interview along with their intention and how to answer them",
     ),
@@ -65,7 +65,7 @@ const interviewReportSchema = z.object({
           ),
       }),
     )
-    .min(3)
+    .min(7)
     .describe(
       "Behavioral questions that can be asked in the interview along with their intention and how to answer them",
     ),
@@ -85,7 +85,7 @@ const interviewReportSchema = z.object({
           ),
       }),
     )
-    .min(3)
+    .min(7)
     .describe(
       "List of skill gaps in the candidate's profile along with their severity",
     ),
@@ -108,7 +108,7 @@ const interviewReportSchema = z.object({
           ),
       }),
     )
-    .min(7)
+    .min(10)
     .describe(
       "A day-wise preparation plan for the candidate to follow in order to prepare for the interview effectively",
     ),
