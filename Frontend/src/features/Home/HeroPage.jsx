@@ -7,7 +7,8 @@ import Navbar from "../interview/components/Navbar";
 const HeroSection = () => {
   return (
     <section className="relative flex flex-col items-center justify-center text-center min-h-screen px-6 bg-gradient-to-br from-slate-950 via-indigo-950 to-black text-white overflow-hidden">
-<Navbar/>
+    <Navbar/>
+    
       {/* Background Glow */}
       <div className="absolute w-[500px] h-[500px] bg-pink-600 blur-[150px] opacity-20 rounded-full top-[-100px] left-[-100px]" />
       <div className="absolute w-[400px] h-[400px] bg-indigo-600 blur-[150px] opacity-20 rounded-full bottom-[-100px] right-[-100px]" />
